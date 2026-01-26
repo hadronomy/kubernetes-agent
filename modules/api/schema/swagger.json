@@ -10479,13 +10479,13 @@
   },
   "cronjob.CronJobDetail": {
    "required": [
-    "objectMeta",
     "typeMeta",
     "schedule",
     "suspend",
     "active",
     "lastSchedule",
     "containerImages",
+    "objectMeta",
     "concurrencyPolicy",
     "startingDeadlineSeconds",
     "errors"
@@ -10603,11 +10603,11 @@
   },
   "daemonset.DaemonSetDetail": {
    "required": [
-    "initContainerImages",
     "objectMeta",
     "typeMeta",
     "podInfo",
     "containerImages",
+    "initContainerImages",
     "errors"
    ],
    "properties": {
@@ -10828,11 +10828,11 @@
   },
   "deployment.DeploymentDetail": {
    "required": [
+    "pods",
     "containerImages",
     "initContainerImages",
     "objectMeta",
     "typeMeta",
-    "pods",
     "selector",
     "statusInfo",
     "conditions",
@@ -11147,13 +11147,13 @@
   },
   "horizontalpodautoscaler.HorizontalPodAutoscalerDetail": {
    "required": [
+    "minReplicas",
     "maxReplicas",
     "currentCPUUtilizationPercentage",
     "targetCPUUtilizationPercentage",
     "objectMeta",
     "typeMeta",
     "scaleTargetRef",
-    "minReplicas",
     "currentReplicas",
     "desiredReplicas",
     "lastScaleTime"
@@ -11280,10 +11280,10 @@
   },
   "ingress.IngressDetail": {
    "required": [
-    "endpoints",
-    "hosts",
     "objectMeta",
     "typeMeta",
+    "endpoints",
+    "hosts",
     "spec",
     "status",
     "errors"
@@ -11450,13 +11450,13 @@
   },
   "job.JobDetail": {
    "required": [
+    "jobStatus",
     "objectMeta",
     "typeMeta",
     "podInfo",
     "containerImages",
     "initContainerImages",
     "parallelism",
-    "jobStatus",
     "completions",
     "errors"
    ],
@@ -11790,8 +11790,8 @@
   },
   "networkpolicy.NetworkPolicyDetail": {
    "required": [
-    "objectMeta",
     "typeMeta",
+    "objectMeta",
     "podSelector",
     "errors"
    ],
@@ -11954,11 +11954,11 @@
   },
   "node.NodeDetail": {
    "required": [
-    "objectMeta",
-    "typeMeta",
     "ready",
     "allocatedResources",
     "nodeInfo",
+    "objectMeta",
+    "typeMeta",
     "phase",
     "podCIDR",
     "providerID",
@@ -12151,16 +12151,16 @@
   },
   "persistentvolume.PersistentVolumeDetail": {
    "required": [
-    "objectMeta",
     "accessModes",
     "storageClass",
     "status",
     "claim",
-    "typeMeta",
-    "capacity",
     "reclaimPolicy",
     "mountOptions",
     "reason",
+    "objectMeta",
+    "typeMeta",
+    "capacity",
     "message",
     "persistentVolumeSource"
    ],
@@ -12278,13 +12278,13 @@
   },
   "persistentvolumeclaim.PersistentVolumeClaimDetail": {
    "required": [
-    "capacity",
-    "accessModes",
-    "storageClass",
     "objectMeta",
     "typeMeta",
     "status",
-    "volume"
+    "volume",
+    "capacity",
+    "accessModes",
+    "storageClass"
    ],
    "properties": {
     "accessModes": {
@@ -12793,15 +12793,15 @@
   },
   "poddisruptionbudget.PodDisruptionBudgetDetail": {
    "required": [
-    "objectMeta",
+    "expectedPods",
     "typeMeta",
-    "desiredHealthy",
-    "disruptionsAllowed",
+    "unhealthyPodEvictionPolicy",
+    "objectMeta",
     "minAvailable",
     "maxUnavailable",
-    "unhealthyPodEvictionPolicy",
     "currentHealthy",
-    "expectedPods",
+    "desiredHealthy",
+    "disruptionsAllowed",
     "disruptedPods"
    ],
    "properties": {
@@ -12905,11 +12905,11 @@
   },
   "replicaset.ReplicaSetDetail": {
    "required": [
-    "initContainerImages",
     "objectMeta",
     "typeMeta",
     "podInfo",
     "containerImages",
+    "initContainerImages",
     "selector",
     "horizontalPodAutoscalerList",
     "errors"
@@ -13019,11 +13019,11 @@
   },
   "replicationcontroller.ReplicationControllerDetail": {
    "required": [
-    "containerImages",
-    "initContainerImages",
     "objectMeta",
     "typeMeta",
     "podInfo",
+    "containerImages",
+    "initContainerImages",
     "labelSelector",
     "errors"
    ],
@@ -13226,8 +13226,8 @@
   },
   "role.RoleDetail": {
    "required": [
-    "typeMeta",
     "objectMeta",
+    "typeMeta",
     "rules",
     "errors"
    ],
@@ -13399,9 +13399,9 @@
   },
   "secret.SecretDetail": {
    "required": [
+    "type",
     "objectMeta",
     "typeMeta",
-    "type",
     "data"
    ],
    "properties": {
@@ -13488,13 +13488,13 @@
   },
   "service.ServiceDetail": {
    "required": [
+    "objectMeta",
     "typeMeta",
     "internalEndpoint",
     "externalEndpoints",
     "selector",
     "type",
     "clusterIP",
-    "objectMeta",
     "endpointList",
     "sessionAffinity",
     "errors"
@@ -13814,12 +13814,12 @@
   },
   "types.CustomResourceDefinitionDetail": {
    "required": [
-    "objectMeta",
-    "typeMeta",
-    "group",
     "scope",
     "names",
     "established",
+    "objectMeta",
+    "typeMeta",
+    "group",
     "conditions",
     "objects",
     "subresources",
@@ -17065,15 +17065,8 @@
    }
   },
   "v1.Time": {
-   "required": [
-    "Time"
-   ],
-   "properties": {
-    "Time": {
-     "type": "string",
-     "format": "date-time"
-    }
-   }
+   "type": "string",
+   "format": "date-time"
   },
   "v1.TypeMeta": {
    "description": "TypeMeta describes an individual object in an API response or request with strings representing the type of the object and its API schema version. Structures that are versioned or persisted should inline TypeMeta.",
