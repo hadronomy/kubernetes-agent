@@ -155,6 +155,20 @@ func enrichOpenAPIObject(swo *spec.Swagger) {
 			Version: environment.Version,
 		},
 	}
+
+	// Fix v1.Time definition: metav1.Time has a custom MarshalJSON that returns
+	// a string (RFC3339 format), not a structure with nested fields.
+	// The swagger generator incorrectly creates an object schema, so we override it.
+	if swo.Definitions != nil {
+		if _, exists := swo.Definitions["v1.Time"]; exists {
+			swo.Definitions["v1.Time"] = spec.Schema{
+				SchemaProps: spec.SchemaProps{
+					Type:   []string{"string"},
+					Format: "date-time",
+				},
+			}
+		}
+	}
 }
 
 /**
