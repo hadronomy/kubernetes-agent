@@ -71,13 +71,24 @@ func deriveAgentProxyListenConfig(cfg *kascfg.ConfigurationFile) agentProxyListe
 func startAgentWebsocketProxyServer(stage stager.Stage, log *zap.Logger, cfg *kascfg.ConfigurationFile) error {
 	listenCfg := deriveAgentProxyListenConfig(cfg)
 
-	handler, err := newAgentWebsocketProxyHandler(log, cfg)
+	proxyHandler, err := newAgentWebsocketProxyHandler(log, cfg)
 	if err != nil {
 		return fmt.Errorf("agent proxy handler: %w", err)
 	}
 
+	mux := http.NewServeMux()
+
+	// Lightweight health endpoint similar to the API module.
+	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte("ok"))
+	})
+
+	// All other paths are served by the websocket proxy handler.
+	mux.Handle("/", proxyHandler)
+
 	server := &http.Server{
-		Handler: handler,
+		Handler: mux,
 	}
 
 	stage.Go(func(ctx context.Context) error {
