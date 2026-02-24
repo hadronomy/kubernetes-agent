@@ -93,6 +93,10 @@ type TerminalResponse struct {
 	ID string `json:"id"`
 }
 
+type HealthResponse struct {
+	Status string `json:"status"`
+}
+
 type JSON string
 
 // CreateHTTPAPIHandler creates a new HTTP handler that handles all requests to the API of the backend.
@@ -120,6 +124,14 @@ func CreateHTTPAPIHandler(iManager integration.Manager) (*restful.Container, err
 
 	integrationHandler := integration.NewHandler(iManager)
 	integrationHandler.Install(apiV1Ws)
+
+	apiV1Ws.Route(
+		apiV1Ws.GET("/health").To(apiHandler.handleGetHealth).
+			// docs
+			Operation("GetHealth").
+			Doc("returns the health of the server").
+			Writes(HealthResponse{}).
+			Returns(http.StatusOK, "OK", HealthResponse{}))
 
 	// CSRF protection
 	apiV1Ws.Route(
@@ -1422,6 +1434,10 @@ func CreateHTTPAPIHandler(iManager integration.Manager) (*restful.Container, err
 			Returns(http.StatusOK, "OK", []byte{}))
 
 	return wsContainer, nil
+}
+
+func (in *APIHandler) handleGetHealth(_ *restful.Request, response *restful.Response) {
+	_ = response.WriteHeaderAndEntity(http.StatusOK, HealthResponse{Status: "ok"})
 }
 
 func (in *APIHandler) handleGetClusterRoleList(request *restful.Request, response *restful.Response) {
