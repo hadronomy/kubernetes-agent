@@ -9,7 +9,7 @@ on:
 env:
   GOPATH: /home/runner/go/
   GOPROXY: "https://proxy.golang.org"
-  REGISTRY_IMAGE: pluralsh/kubernetes-agent
+  REGISTRY_IMAGE: hadronomy/kubernetes-agent
 jobs:
   build-api:
     name: Build API
@@ -100,6 +100,7 @@ jobs:
             type=sha
             type=ref,event=pr
             type=ref,event=branch
+            type=raw,value=0.12.24-mze.1,enable=${{ github.ref == 'refs/heads/master' }}
             type=raw,value=latest,enable={{is_default_branch}}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
