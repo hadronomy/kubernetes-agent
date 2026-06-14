@@ -173,6 +173,11 @@ func buildConfigFromAuthInfo(authInfo *api.AuthInfo) (*rest.Config, error) {
 	}
 
 	if authInfo.Token != "" {
+		config.BearerToken = authInfo.Token
+		config.BearerTokenFile = ""
+		config.AuthProvider = nil
+		config.ExecProvider = nil
+
 		wrap := config.WrapTransport
 		config.WrapTransport = func(rt http.RoundTripper) http.RoundTripper {
 			if wrap != nil {
