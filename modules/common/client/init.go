@@ -164,10 +164,46 @@ func buildConfigFromAuthInfo(authInfo *api.AuthInfo) (*rest.Config, error) {
 
 	cmdCfg.CurrentContext = DefaultCmdConfigName
 
-	return clientcmd.NewDefaultClientConfig(
+	config, err := clientcmd.NewDefaultClientConfig(
 		*cmdCfg,
 		&clientcmd.ConfigOverrides{},
 	).ClientConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	if authInfo.Token != "" {
+		wrap := config.WrapTransport
+		config.WrapTransport = func(rt http.RoundTripper) http.RoundTripper {
+			if wrap != nil {
+				rt = wrap(rt)
+			}
+
+			return bearerTokenRoundTripper{
+				token:   authInfo.Token,
+				wrapped: rt,
+			}
+		}
+	}
+
+	return config, nil
+}
+
+type bearerTokenRoundTripper struct {
+	token   string
+	wrapped http.RoundTripper
+}
+
+func (b bearerTokenRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
+	if req.Header.Get(authorizationHeader) == "" {
+		req.Header.Set(authorizationHeader, authorizationTokenPrefix+b.token)
+	}
+
+	if b.wrapped == nil {
+		return http.DefaultTransport.RoundTrip(req)
+	}
+
+	return b.wrapped.RoundTrip(req)
 }
 
 func buildAuthInfo(request *http.Request) (*api.AuthInfo, error) {
